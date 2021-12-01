@@ -1,0 +1,90 @@
+@use '_input' as adv;
+@use 'sass:list';
+
+$depth-incr: 0;
+$sum-incr: 0;
+$tri-list: (0,0,0);
+
+@function get-sum($list) {
+  $_sum: 0;
+  @each $value in $list {
+    $_sum: $_sum + $value
+  }
+  @return $_sum;
+}
+
+@function get-list-of-three($x, $_li) {
+  @return list.nth($_li, $x), list.nth($_li, ($x + 1)), list.nth($_li, ($x + 2)); 
+}
+
+@function list-sum-is-larger($newlist, $oldlist) {
+  $a: get-sum($newlist);
+  $b: get-sum($oldlist);
+  @return $a > $b;
+}
+
+@for $i from 1 through list.length(adv.$measurements) {
+  $y: $i + 2;
+  
+  @if $i > 1 {
+    $_current: list.nth(adv.$measurements, $i);
+    $_prev: list.nth(adv.$measurements, ($i - 1));
+
+    @if $_current > $_prev {
+      $depth-incr: $depth-incr + 1;
+    }
+
+    @if $y <= list.length(adv.$measurements) {
+      $_prev: $tri-list;
+      $tri-list: get-list-of-three($i, adv.$measurements);
+
+      @if list-sum-is-larger($tri-list, $_prev) {
+        $sum-incr: $sum-incr + 1;
+      }
+    }
+  }
+
+}
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  color: #eee;
+  background: #222;
+  font-family: arial;
+}
+
+h1, p {
+  margin: 0;
+  padding-bottom: 18px;
+}
+
+.box {
+  background: #333;
+  margin: 15px auto;
+  max-width: 400px;
+  padding: 15px;
+  width: 100%;
+}
+
+.details {
+  font-size: 28px;
+  position: relative;
+
+  &::after {
+    color: #ffff00;
+    position: relative;
+    font-size: 32px;
+  }
+}
+
+#general_counter::after {
+  content: '#{$depth-incr}';
+}
+
+#sum_counter::after {
+  content: '#{$sum-incr}';
+}
