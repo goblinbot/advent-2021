@@ -1,4 +1,4 @@
 node_modules/
 
-day/01/*.css
-day/01/*.css.map
+day/**/*.css
+day/**/*.css.map

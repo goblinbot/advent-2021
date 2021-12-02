@@ -1,5 +1,8 @@
-# Sorry not sorry
+# #FFFF00 submarine
 
-## Day 1: #FFFF00 submarine (SCSS)
+Sorry not sorry.
 
-compile with `sass index.scss index.css` to calculate the values in `_input.scss`
+I'm doing advent of code puzzles in SCSS, and maybe some other "please don't" languages.
+## Day 1 - 2 (SCSS)
+
+compile with `sass style.scss style.css` to calculate the values in `_input.scss`

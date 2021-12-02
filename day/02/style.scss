@@ -1,0 +1,74 @@
+@use '../../default/' as *;
+@use 'sass:list';
+@use 'sass:math';
+@use '_input' as adv;
+
+$old-position-horizontal: 0;
+$old-position-depth: 0;
+
+$aim: 0;
+$corrected-position-horizontal: 0;
+$corrected-position-depth: 0;
+
+
+@function get-movement-action($i) {
+  $o: $i + 1;
+  @return (list.nth(adv.$movements, $i), list.nth(adv.$movements, $o));
+}
+
+@for $i from 1 through list.length(adv.$movements) {
+
+  // only act on ODD
+  @if $i % 2 != 0 {
+    $next: get-movement-action($i);
+    $direction: list.nth($next, 1);
+    $units: list.nth($next, 2);
+
+    @if $direction == forward {
+      $old-position-horizontal: $old-position-horizontal + $units;
+
+      $corrected-position-horizontal: $corrected-position-horizontal + $units;
+      $corrected-position-depth: $corrected-position-depth + ($units * $aim);
+
+    } @else if $direction == up {
+      $old-position-depth: $old-position-depth - $units;
+      $aim: $aim - $units;
+
+    } @else if $direction == down {
+      $old-position-depth: $old-position-depth + $units;
+      $aim: $aim + $units;
+
+    } @else {
+      @error 'unknown direction', $direction;
+    }
+  }
+
+}
+
+::after {
+  color: #ffff00;
+}
+
+#result {
+  &-1::after {
+    content: '#{$old-position-horizontal * $old-position-depth}';
+    font-size: 21px;
+  }
+
+  &-2::after {
+    content: '#{$old-position-horizontal}, #{$old-position-depth}';
+  }
+
+  &-3::after {
+    content: '#{$corrected-position-horizontal * $corrected-position-depth}';
+    font-size: 21px;
+  }
+
+  &-4::after {
+    content: '#{$corrected-position-horizontal}, #{$corrected-position-depth}';
+  }
+
+  &-5::after {
+    content: '#{$aim}';
+  }
+}

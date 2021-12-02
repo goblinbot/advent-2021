@@ -1,5 +1,6 @@
 @use '_input' as adv;
 @use 'sass:list';
+@use '../../default/' as *;
 
 $depth-incr: 0;
 $sum-incr: 0;
@@ -18,9 +19,7 @@ $tri-list: (0,0,0);
 }
 
 @function list-sum-is-larger($newlist, $oldlist) {
-  $a: get-sum($newlist);
-  $b: get-sum($oldlist);
-  @return $a > $b;
+  @return get-sum($newlist) > get-sum($oldlist);
 }
 
 @for $i from 1 through list.length(adv.$measurements) {
@@ -44,30 +43,6 @@ $tri-list: (0,0,0);
     }
   }
 
-}
-
-html {
-  height: 100%;
-  width: 100%;
-}
-
-body {
-  color: #eee;
-  background: #222;
-  font-family: arial;
-}
-
-h1, p {
-  margin: 0;
-  padding-bottom: 18px;
-}
-
-.box {
-  background: #333;
-  margin: 15px auto;
-  max-width: 400px;
-  padding: 15px;
-  width: 100%;
 }
 
 .details {
