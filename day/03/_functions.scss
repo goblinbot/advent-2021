@@ -1,0 +1,43 @@
+@use 'sass:math';
+@use 'sass:string';
+@use 'sass:list';
+@use '../../global/abstracts' as fnc;
+
+@function get-bit-by-index($binput: '0', $_i: 1) {
+  // clone input -> ensure string type -> slice.
+  $bin-str: '#{$binput}';
+  @return string.unquote(string.slice($bin-str, $_i, $_i));
+}
+
+@function binary-to-decimal($binary-input: 0) {
+  $bit-modifier: 1;
+  $decimal-result: 0;
+
+  // sass can't slice/splice integers nicely. Strings, on the other hands..
+  $_bits: string.length('#{$binary-input}');
+
+  @while $_bits > 0 {
+    $_bit: get-bit-by-index($binary-input, $_bits);
+    $_int: fnc.str-to-number($_bit);
+    $decimal-result: $decimal-result + ($_int * $bit-modifier);
+    // multiply modifier (1>2>4>8>16..), decrement bit count
+    $bit-modifier: $bit-modifier * 2;
+    $_bits: $_bits - 1;
+  }
+
+  @return $decimal-result;
+}
+
+@function to-binary-string($binput: 10001, $min-length: 12) {
+  $str: '#{$binput}';
+  $str-length: string.length($str);
+
+  @if $str-length < $min-length {
+    $diff: $min-length - $str-length ;
+
+    @for $i from 1 through $diff {
+      $str: '0#{$str}';
+    }
+  }
+  @return $str;
+}

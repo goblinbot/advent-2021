@@ -1,6 +1,6 @@
 @use '_input' as adv;
 @use 'sass:list';
-@use '../../default/' as *;
+@use '../../global/' as *;
 
 $depth-incr: 0;
 $sum-incr: 0;

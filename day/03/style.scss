@@ -1,0 +1,75 @@
+@use '../../global/' as *;
+@use '../../global/abstracts' as fnc;
+@use '_functions' as witchcraft;
+@use '_input' as adv;
+
+@use 'sass:list';
+@use 'sass:string';
+@use 'sass:math';
+
+// Yes it's an unit test in SASS.
+$test-input-binary: 10110;
+$test-expected-output-decimal: 22;
+
+@if witchcraft.binary-to-decimal($test-input-binary) != $test-expected-output-decimal {
+  @error 'Binary to Decimal converter provides invalid results.';
+}
+
+// Anyway;
+$gamma-rate: '';
+$epsilon-rate: '';
+$total-decimal-consumption: 0;
+
+$bit-size: 12;
+$list-size: list.length(adv.$power-consumption);
+
+$x: $bit-size;
+
+@while $x > 0 {
+  $ones-counter: 0;
+
+  @for $i from 1 through $list-size {
+    $_chunk: list.nth(adv.$power-consumption, $i);
+    $_chunk: witchcraft.to-binary-string($_chunk, $bit-size);
+    
+    $_bit: witchcraft.get-bit-by-index($_chunk, $x);
+    $_bit: fnc.str-to-number($_bit);
+
+    @if $_bit == 1 {
+      $ones-counter: $ones-counter + 1;
+    }
+  }
+
+  @if $ones-counter > math.div($list-size, 2) {
+    $gamma-rate: '1#{$gamma-rate}';
+    $epsilon-rate: '0#{$epsilon-rate}';
+  } @else {
+    $gamma-rate: '0#{$gamma-rate}';
+    $epsilon-rate: '1#{$epsilon-rate}';
+  }
+
+  $x: $x - 1;
+}
+
+$total-decimal-consumption: (
+  witchcraft.binary-to-decimal($gamma-rate)) * (witchcraft.binary-to-decimal($epsilon-rate)
+);
+
+::after {
+  color: #ffff00;
+  font-size: 21px;
+}
+
+#result {
+  &-1::after {
+    content: '  Gamma #{$gamma-rate} #{witchcraft.binary-to-decimal($gamma-rate)}';
+  }
+
+  &-2::after {
+    content: '  Epsilon #{$epsilon-rate} #{witchcraft.binary-to-decimal($epsilon-rate)}';
+  }
+
+  &-3::after {
+    content: '  #{$total-decimal-consumption}';
+  }
+}
